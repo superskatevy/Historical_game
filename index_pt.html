@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Espírito da História</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            user-select: none;
+            padding: 20px;
+        }
+
+        .fade-in {
+            animation: fadeIn 1.5s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: normal;
+            letter-spacing: 1px;
+            max-width: 800px;
+            line-height: 1.5;
+        }
+
+        .instruction {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #aaaaaa;
+            margin-bottom: 20px;
+        }
+
+        .quote-box {
+            max-width: 750px;
+            margin-top: 25px;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+            min-height: 80px;
+        }
+
+        .quote-box strong {
+            color: #ffffff;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+        }
+
+        .manifesto-text {
+            max-width: 800px;
+            font-size: 1.5rem;
+            line-height: 1.8;
+            letter-spacing: 0.5px;
+        }
+
+        .the-end {
+            font-size: 5rem;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+        }
+
+        button {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            padding: 12px 32px;
+            font-size: 1rem;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+        }
+
+        button:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        #next-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 40px;
+            margin-top: 0;
+        }
+
+        .single-img {
+            max-height: 45vh;
+            max-width: 80vw;
+            border: 1px solid #333;
+            cursor: pointer;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .single-img:hover {
+            transform: scale(1.02);
+            border-color: #ffffff;
+        }
+
+        .trio-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .trio-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .trio-img {
+            height: 30vh;
+            width: auto;
+            max-width: 28vw;
+            object-fit: cover;
+            border: 1px solid #333;
+            cursor: pointer;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .trio-img:hover {
+            transform: scale(1.03);
+            border-color: #ffffff;
+        }
+
+        .quintet-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            max-width: 95vw;
+        }
+
+        .quintet-img {
+            height: 24vh;
+            width: 17vw;
+            object-fit: cover;
+            border: 1px solid #444;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="stage"></div>
+    <button id="next-btn" class="hidden">Próximo</button>
+    <audio id="bg-music" loop></audio>
+
+    <script>
+        const stage = document.getElementById('stage');
+        const nextBtn = document.getElementById('next-btn');
+        const audio = document.getElementById('bg-music');
+
+        let currentScene = 0;
+        let currentSong = '';
+
+        function playSong(src) {
+            if (currentSong !== src) {
+                currentSong = src;
+                audio.src = src;
+                audio.play().catch(e => console.log("Erro ao reproduzir áudio:", e));
+            }
+        }
+
+        function stopSong() {
+            audio.pause();
+            audio.currentTime = 0;
+            currentSong = '';
+        }
+
+        function scheduleNextButton(delayMs) {
+            setTimeout(() => {
+                nextBtn.classList.remove('hidden');
+                nextBtn.classList.add('fade-in');
+            }, delayMs);
+        }
+
+        function clearStage() {
+            stage.innerHTML = '';
+            nextBtn.classList.add('hidden');
+            nextBtn.classList.remove('fade-in');
+        }
+
+        // CENA 0: Introdução
+        function loadIntro() {
+            clearStage();
+            const title = document.createElement('h1');
+            title.className = 'fade-in';
+            title.innerText = 'Um espectro ronda a Europa — o espectro do Comunismo.';
+            stage.appendChild(title);
+
+            setTimeout(() => {
+                const playBtn = document.createElement('button');
+                playBtn.innerText = 'Jogar';
+                playBtn.className = 'fade-in';
+                playBtn.onclick = () => {
+                    clearStage();
+                    setTimeout(loadScene1, 5000);
+                };
+                stage.appendChild(playBtn);
+            }, 2000);
+        }
+
+        // CENA 1: Adam Smith
+        function loadScene1() {
+            currentScene = 1;
+            clearStage();
+
+            const inst = document.createElement('div');
+            inst.className = 'instruction fade-in';
+            inst.innerText = 'Clique na imagem';
+
+            const img = document.createElement('img');
+            img.src = 'images/adam_smith.jpg';
+            img.className = 'single-img fade-in';
+
+            const quote = document.createElement('div');
+            quote.className = 'quote-box';
+
+            let clicked = false;
+            img.onclick = () => {
+                if (clicked) return;
+                clicked = true;
+                playSong('audio/song1.mp3');
+                quote.classList.add('fade-in');
+                quote.innerHTML = `
+                    <strong>Adam Smith (1723–1790)</strong>
+                    Arquiteto da economia política moderna. Ao teorizar a divisão do trabalho, o livre mercado e a "mão invisível" do interesse próprio, Smith mapeou o motor do capitalismo industrial — um sistema que destruiria o feudalismo, geraria riquezas sem precedentes e forjaria as próprias contradições de classe que mais tarde ameaçariam sua sobrevivência.
+                `;
+                scheduleNextButton(3000);
+            };
+
+            stage.append(inst, img, quote);
+        }
+
+        // CENA 2: Hegel
+        function loadScene2() {
+            currentScene = 2;
+            clearStage();
+
+            setTimeout(() => {
+                const inst = document.createElement('div');
+                inst.className = 'instruction fade-in';
+                inst.innerText = 'Clique na imagem';
+
+                const img = document.createElement('img');
+                img.src = 'images/hegel.jpg';
+                img.className = 'single-img fade-in';
+
+                const quote = document.createElement('div');
+                quote.className = 'quote-box';
+
+                let clicked = false;
+                img.onclick = () => {
+                    if (clicked) return;
+                    clicked = true;
+                    playSong('audio/song2.mp3');
+                    quote.classList.add('fade-in');
+                    quote.innerHTML = `
+                        <strong>Georg Wilhelm Friedrich Hegel (1770–1831)</strong>
+                        A história não é uma sucessão aleatória de acidentes; é o desdobramento inquieto e espiritual da Razão rumo à liberdade absoluta. Através do fogo da dialética — onde toda ordem estabelecida gera sua própria contradição — o Espírito do Mundo estilhaça o velho para dar à luz uma verdade superior. Nada estático sobrevive à marcha do devir.
+                    `;
+                    scheduleNextButton(3500);
+                };
+
+                stage.append(inst, img, quote);
+            }, 1500);
+        }
+
+        // CENA 3: Jovem Karl Marx
+        function loadScene3() {
+            currentScene = 3;
+            clearStage();
+
+            setTimeout(() => {
+                const inst = document.createElement('div');
+                inst.className = 'instruction fade-in';
+                inst.innerText = 'Clique na imagem';
+
+                const img = document.createElement('img');
+                img.src = 'images/young_marx.jpg';
+                img.className = 'single-img fade-in';
+
+                const quote = document.createElement('div');
+                quote.className = 'quote-box';
+
+                let clicked = false;
+                img.onclick = () => {
+                    if (clicked) return;
+                    clicked = true;
+                    playSong('audio/song3.mp3');
+                    quote.classList.add('fade-in');
+                    quote.innerHTML = `
+                        <strong>Karl Marx (1818–1883)</strong>
+                        Marx tomou a dialética mística de Hegel e a colocou firmemente sobre a terra material. A história não é movida por fantasmas abstratos, mas pelo trabalho humano real e pela luta de classes. Ao expor como o capitalismo extrai mais-valia dos trabalhadores enquanto os aliena de sua própria humanidade, Marx forjou uma arma científica para o proletariado: os filósofos apenas interpretaram o mundo — o que importa é transformá-lo.
+                    `;
+                    scheduleNextButton(3500);
+                };
+
+                stage.append(inst, img, quote);
+            }, 1500);
+        }
+
+        // CENA 4: Proudhon, Bakunin, Kropotkin
+        function loadScene4() {
+            currentScene = 4;
+            clearStage();
+
+            setTimeout(() => {
+                const inst = document.createElement('div');
+                inst.className = 'instruction fade-in';
+                inst.innerText = 'Clique em cada pensador para ler sua crítica';
+
+                const container = document.createElement('div');
+                container.className = 'trio-container fade-in';
+
+                const quote = document.createElement('div');
+                quote.className = 'quote-box';
+
+                const thinkers = [
+                    {
+                        img: 'images/proudhon.jpg',
+                        text: '<strong>Pierre-Joseph Proudhon</strong>"A propriedade é um roubo!" Rejeitando tanto a exploração capitalista quanto o socialismo autoritário de Estado, Proudhon defendeu o mutualismo e a livre federação — argumentando que substituir um patrão burguês por um burocrata estatal apenas muda o senhor, mantendo o trabalhador acorrentado.'
+                    },
+                    {
+                        img: 'images/bakunin.jpg',
+                        text: '<strong>Mikhail Bakunin</strong>"A liberdade sem o socialismo é privilégio e injustiça; o socialismo sem a liberdade é escravidão e brutalidade." Bakunin advertiu ferozmente a Marx que uma "ditadura do proletariado" inevitavelmente se transformaria em uma tirânica burocracia vermelha governando sobre as massas.'
+                    },
+                    {
+                        img: 'images/kropotkin.jpg',
+                        text: '<strong>Piotr Kropotkin</strong>O teórico do Anarcocomunismo. Provando que o apoio mútuo — e não a competição implacável — é o verdadeiro motor da evolução, Kropotkin vislumbrou uma sociedade sem Estado de comunas livres, onde pão, abrigo e dignidade pertencem a todos, sem autoridade central.'
+                    }
+                ];
+
+                let nextScheduled = false;
+
+                thinkers.forEach(person => {
+                    const item = document.createElement('div');
+                    item.className = 'trio-item';
+
+                    const img = document.createElement('img');
+                    img.src = person.img;
+                    img.className = 'trio-img';
+
+                    img.onclick = () => {
+                        playSong('audio/song4.mp3');
+                        quote.classList.remove('fade-in');
+                        void quote.offsetWidth;
+                        quote.classList.add('fade-in');
+                        quote.innerHTML = person.text;
+
+                        if (!nextScheduled) {
+                            nextScheduled = true;
+                            scheduleNextButton(4000);
+                        }
+                    };
+
+                    item.appendChild(img);
+                    container.appendChild(item);
+                });
+
+                stage.append(inst, container, quote);
+            }, 1500);
+        }
+
+        // CENA 5: Makhno, Anarquistas Espanhóis, Zapatistas
+        function loadScene5() {
+            currentScene = 5;
+            clearStage();
+
+            setTimeout(() => {
+                const inst = document.createElement('div');
+                inst.className = 'instruction fade-in';
+                inst.innerText = 'Clique nos movimentos para ver a história em ação';
+
+                const container = document.createElement('div');
+                container.className = 'trio-container fade-in';
+
+                const quote = document.createElement('div');
+                quote.className = 'quote-box';
+
+                const movements = [
+                    {
+                        img: 'images/makhno.jpg',
+                        text: '<strong>Makhnovtchina (Território Livre da Ucrânia, 1918–1921)</strong>Liderados por Nestor Makhno, milhões de camponeses e trabalhadores defenderam comunas autogeridas e sovietes livres tanto contra os monarquistas Brancos quanto contra a centralização estatal bolchevique — provando que o socialismo sem Estado podia se organizar e lutar.'
+                    },
+                    {
+                        img: 'images/spanish_anarchists.jpg',
+                        text: '<strong>Catalunha e Aragão Revolucionários (1936–1939)</strong>No calor da Guerra Civil Espanhola, milhões de trabalhadores tomaram fábricas, terras e cidades inteiras. Sem patrões e sem tutela estatal, coletivizaram a economia e provaram que a autogestão funciona em larga escala.'
+                    },
+                    {
+                        img: 'images/zapatistas.jpg',
+                        text: '<strong>Os Zapatistas (EZLN, Chiapas, 1994–Presente)</strong>Erguendo-se contra o neoliberalismo, comunidades indígenas construíram um autogoverno autônomo e horizontal enraizado na dignidade coletiva — "mandar obedecendo" — mantendo viva a chama da autonomia anticapitalista no século XXI.'
+                    }
+                ];
+
+                let nextScheduled = false;
+
+                movements.forEach(mov => {
+                    const item = document.createElement('div');
+                    item.className = 'trio-item';
+
+                    const img = document.createElement('img');
+                    img.src = mov.img;
+                    img.className = 'trio-img';
+
+                    img.onclick = () => {
+                        playSong('audio/song5.mp3');
+                        quote.classList.remove('fade-in');
+                        void quote.offsetWidth;
+                        quote.classList.add('fade-in');
+                        quote.innerHTML = mov.text;
+
+                        if (!nextScheduled) {
+                            nextScheduled = true;
+                            scheduleNextButton(4000);
+                        }
+                    };
+
+                    item.appendChild(img);
+                    container.appendChild(item);
+                });
+
+                stage.append(inst, container, quote);
+            }, 1500);
+        }
+
+        // CENA 6: As 5 Imagens & Inevitabilidade
+        function loadScene6() {
+            currentScene = 6;
+            clearStage();
+
+            setTimeout(() => {
+                playSong('audio/song6.mp3');
+
+                const container = document.createElement('div');
+                container.className = 'quintet-container fade-in';
+
+                const images = [
+                    'images/trump.jpg',
+                    'images/ai.jpg',
+                    'images/protests.jpg',
+                    'images/marx_kropotkin.jpg',
+                    'images/ancom_flag.jpg'
+                ];
+
+                images.forEach(src => {
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.className = 'quintet-img';
+                    container.appendChild(img);
+                });
+
+                const quote = document.createElement('div');
+                quote.className = 'quote-box hidden';
+                quote.innerHTML = `
+                    O espírito da história não pode ser enjaulado por algoritmos, fronteiras ou impérios. À medida que as velhas instituições desmoronam em ruínas sob o peso de suas próprias contradições, as massas sociais inevitavelmente despertam para retomar seu destino. Das cinzas da crise, ergue-se uma nova ordem mundial — superando todas as correntes do passado.<br><br>
+                    <em>"Os proletários nada têm a perder a não ser suas correntes. Têm um mundo a ganhar."</em> — Marx &nbsp;|&nbsp; <em>"O bem-estar para todos já não é um sonho; é uma necessidade."</em> — Kropotkin
+                `;
+
+                stage.append(container, quote);
+
+                setTimeout(() => {
+                    quote.classList.remove('hidden');
+                    quote.classList.add('fade-in');
+                    scheduleNextButton(5000);
+                }, 3000);
+
+            }, 1500);
+        }
+
+        // CENA 7: Manifesto Final
+        function loadScene7() {
+            currentScene = 7;
+            clearStage();
+
+            setTimeout(() => {
+                const text = document.createElement('div');
+                text.className = 'manifesto-text fade-in';
+                text.innerHTML = `
+                    A luta não acabou. A história ainda não teve sua última página escrita.<br><br>
+                    O capitalismo não pôde prevalecer — e não prevalecerá. Suas contradições são absolutas, e seu tempo está se esgotando.<br><br>
+                    As massas vão se levantar. Um novo futuro está chegando — construído por mãos livres, compartilhado por todos. A humanidade está prestes a surpreender a si mesma.
+                `;
+                stage.appendChild(text);
+                scheduleNextButton(5000);
+            }, 1500);
+        }
+
+        // CENA 8: Fim
+        function loadScene8() {
+            currentScene = 8;
+            clearStage();
+            stopSong();
+
+            setTimeout(() => {
+                const end = document.createElement('div');
+                end.className = 'the-end fade-in';
+                end.innerText = 'FIM';
+                stage.appendChild(end);
+            }, 1000);
+        }
+
+        nextBtn.onclick = () => {
+            if (currentScene === 1) loadScene2();
+            else if (currentScene === 2) loadScene3();
+            else if (currentScene === 3) loadScene4();
+            else if (currentScene === 4) loadScene5();
+            else if (currentScene === 5) loadScene6();
+            else if (currentScene === 6) loadScene7();
+            else if (currentScene === 7) loadScene8();
+        };
+
+        window.onload = loadIntro;
+    </script>
+</body>
+</html>
